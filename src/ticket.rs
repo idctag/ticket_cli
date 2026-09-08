@@ -1,8 +1,20 @@
+use core::fmt;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TicketStatus {
     Done,
     Pending,
     Archived,
+}
+
+impl fmt::Display for TicketStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TicketStatus::Done => write!(f, "Done"),
+            TicketStatus::Pending => write!(f, "Pending"),
+            TicketStatus::Archived => write!(f, "Archived"),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -21,6 +33,13 @@ impl Ticket {
             description: description.into(),
             status: TicketStatus::Pending,
         }
+    }
+
+    pub fn display(&self) {
+        println!(
+            "{} {} {} {}",
+            &self.id, &self.title, &self.description, &self.status
+        )
     }
 
     pub fn id(&self) -> u32 {
