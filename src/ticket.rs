@@ -1,6 +1,6 @@
 use core::fmt;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub enum TicketStatus {
     Done,
     Pending,
@@ -25,6 +25,16 @@ pub struct Ticket {
     status: TicketStatus,
 }
 
+impl fmt::Display for Ticket {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "[{}] {} | {} | {}",
+            self.id, self.title, self.description, self.status
+        )
+    }
+}
+
 impl Ticket {
     pub fn new(id: u32, title: impl Into<String>, description: impl Into<String>) -> Self {
         Self {
@@ -33,13 +43,6 @@ impl Ticket {
             description: description.into(),
             status: TicketStatus::Pending,
         }
-    }
-
-    pub fn display(&self) {
-        println!(
-            "{} {} {} {}",
-            &self.id, &self.title, &self.description, &self.status
-        )
     }
 
     pub fn id(&self) -> u32 {
@@ -54,8 +57,8 @@ impl Ticket {
         &self.description
     }
 
-    pub fn status(&self) -> &TicketStatus {
-        &self.status
+    pub fn status(&self) -> TicketStatus {
+        self.status
     }
 
     pub fn set_title(&mut self, title: impl Into<String>) {
@@ -65,7 +68,7 @@ impl Ticket {
         self.description = description.into()
     }
     pub fn set_status(&mut self, status: TicketStatus) {
-        self.status = status.into()
+        self.status = status
     }
 
     pub fn mark_done(&mut self) {
