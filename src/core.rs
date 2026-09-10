@@ -29,7 +29,7 @@ impl UserTickets {
         self.tickets.iter().find(|ticket| ticket.id() == id)
     }
 
-    pub fn find_mud(&mut self, id: u32) -> Option<&mut Ticket> {
+    pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
         self.tickets.iter_mut().find(|ticket| ticket.id() == id)
     }
 }
