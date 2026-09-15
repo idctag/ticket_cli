@@ -25,6 +25,12 @@ pub struct Ticket {
     status: TicketStatus,
 }
 
+pub struct TicketUpdate {
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub status: Option<TicketStatus>,
+}
+
 impl fmt::Display for Ticket {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
@@ -77,5 +83,17 @@ impl Ticket {
 
     pub fn archive(&mut self) {
         self.status = TicketStatus::Archived
+    }
+
+    pub fn apply_update(&mut self, update: TicketUpdate) {
+        if let Some(title) = update.title {
+            self.set_title(title);
+        }
+        if let Some(description) = update.description {
+            self.set_description(description);
+        }
+        if let Some(status) = update.status {
+            self.set_status(status);
+        }
     }
 }
