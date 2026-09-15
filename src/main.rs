@@ -7,9 +7,9 @@ fn main() {
     loop {
         print_menu();
         match read_choice() {
-            1 => list_tickets(&tickets),
-            2 => add_ticket(&mut tickets),
-            3 => break,
+            Ok(1) => list_tickets(&tickets),
+            Ok(2) => add_ticket(&mut tickets),
+            Ok(3) => break,
             _ => println!("Invalid choice"),
         }
     }
@@ -22,9 +22,25 @@ fn print_menu() {
     println!("[3] quit");
 }
 
-fn list_tickets(tickets: &UserTickets) {}
+fn list_tickets(tickets: &UserTickets) {
+    for t in tickets.tickets() {
+        println!("{t}")
+    }
+}
 
-fn add_ticket(tickets: &mut UserTickets) {}
+fn add_ticket(tickets: &mut UserTickets) {
+    let mut title = String::new();
+    let mut description = String::new();
+    println!("enter Title");
+    io::stdin()
+        .read_line(&mut title)
+        .expect("Failed to read line");
+    println!("Description");
+    io::stdin()
+        .read_line(&mut description)
+        .expect("Failed to read line");
+    tickets.add_ticket(title, description);
+}
 
 fn read_choice() -> Result<u8, ParseIntError> {
     let mut input = String::new();
