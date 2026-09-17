@@ -5,6 +5,7 @@ pub enum TicketStatus {
     Done,
     Pending,
     Archived,
+    Undecided,
 }
 
 impl fmt::Display for TicketStatus {
@@ -29,6 +30,16 @@ pub struct TicketUpdate {
     pub title: Option<String>,
     pub description: Option<String>,
     pub status: Option<TicketStatus>,
+}
+
+impl TicketUpdate {
+    pub fn new() -> Self {
+        Self {
+            title: None,
+            description: None,
+            status: None,
+        }
+    }
 }
 
 impl fmt::Display for Ticket {

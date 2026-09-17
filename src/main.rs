@@ -1,6 +1,9 @@
 use std::{io, num::ParseIntError};
 
-use todo_cli::core::UserTickets;
+use todo_cli::{
+    core::UserTickets,
+    ticket::{TicketStatus, TicketUpdate},
+};
 
 fn main() {
     let mut tickets = UserTickets::new();
@@ -39,8 +42,23 @@ fn edit_ticket(u_tickets: &mut UserTickets) {
     let id_num = id.parse().expect("invalid id");
     let mut t_to_update = u_tickets.find_mut(id_num);
     if let Some(t) = t_to_update {
-        //take user input
+        let mut title_update = String::new();
+        println!("new title");
+        io::stdin()
+            .read_line(&mut title_update)
+            .expect("Failed to read line");
+        let mut description_update = String::new();
+        println!("new description");
+        io::stdin()
+            .read_line(&mut description_update)
+            .expect("Failed to read line");
+        let mut status_update = String::new();
+        println!("new status");
+        io::stdin()
+            .read_line(&mut status_update)
+            .expect("Failed to read line");
 
+        //take user input
         t.apply_update(update);
     }
 }
