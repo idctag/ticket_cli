@@ -2,7 +2,7 @@ use std::{io, num::ParseIntError};
 
 use todo_cli::{
     core::UserTickets,
-    ticket::{TicketStatus, TicketUpdate},
+    ticket::{TicketUpdate, string_to_status},
 };
 
 fn main() {
@@ -26,7 +26,8 @@ fn print_menu() {
     println!("Choose from options");
     println!("[1] list");
     println!("[2] add");
-    println!("[3] quit");
+    println!("[3] edit");
+    println!("[4] quit");
 }
 
 fn list_tickets(tickets: &UserTickets) {
@@ -39,27 +40,31 @@ fn edit_ticket(u_tickets: &mut UserTickets) {
     let mut id = String::new();
     println!("enter ticket id to edit");
     io::stdin().read_line(&mut id).expect("Failed to read line");
-    let id_num = id.parse().expect("invalid id");
-    let mut t_to_update = u_tickets.find_mut(id_num);
-    if let Some(t) = t_to_update {
-        let mut title_update = String::new();
-        println!("new title");
-        io::stdin()
-            .read_line(&mut title_update)
-            .expect("Failed to read line");
-        let mut description_update = String::new();
-        println!("new description");
-        io::stdin()
-            .read_line(&mut description_update)
-            .expect("Failed to read line");
-        let mut status_update = String::new();
-        println!("new status");
-        io::stdin()
-            .read_line(&mut status_update)
-            .expect("Failed to read line");
+    let id_num: u32 = id.trim().parse().unwrap();
+    let ticket_to_update = u_tickets.find_mut(id_num);
 
-        //take user input
-        t.apply_update(update);
+    if let Some(ticket) = ticket_to_update {
+        let mut title = String::new();
+        println!("enter ticket title to edit");
+        io::stdin()
+            .read_line(&mut title)
+            .expect("Failed to read line");
+        let mut description = String::new();
+        println!("enter ticket description to edit");
+        io::stdin()
+            .read_line(&mut description)
+            .expect("Failed to read line");
+        let mut status_str = String::new();
+        println!("enter ticket status to edit");
+        io::stdin()
+            .read_line(&mut status_str)
+            .expect("Failed to read line");
+        let s_status = string_to_status(&status_str);
+        let mut update = TicketUpdate::new();
+        update.title = Some(title);
+        update.description = Some(description);
+        update.status = Some(s_status);
+        ticket.apply_update(update);
     }
 }
 

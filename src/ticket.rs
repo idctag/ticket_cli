@@ -14,6 +14,7 @@ impl fmt::Display for TicketStatus {
             TicketStatus::Done => write!(f, "Done"),
             TicketStatus::Pending => write!(f, "Pending"),
             TicketStatus::Archived => write!(f, "Archived"),
+            TicketStatus::Undecided => write!(f, "Undecided"),
         }
     }
 }
@@ -106,5 +107,14 @@ impl Ticket {
         if let Some(status) = update.status {
             self.set_status(status);
         }
+    }
+}
+
+pub fn string_to_status(s_status: &str) -> TicketStatus {
+    match s_status {
+        "done" => TicketStatus::Done,
+        "pending" => TicketStatus::Pending,
+        "archived" => TicketStatus::Archived,
+        _ => TicketStatus::Undecided,
     }
 }
