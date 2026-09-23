@@ -3,6 +3,7 @@ use crate::ticket::Ticket;
 pub struct UserTickets {
     tickets: Vec<Ticket>,
     next_id: u32,
+    selected: Option<usize>,
 }
 
 impl UserTickets {
@@ -10,6 +11,7 @@ impl UserTickets {
         Self {
             tickets: Vec::new(),
             next_id: 1,
+            selected: None,
         }
     }
 
@@ -31,6 +33,16 @@ impl UserTickets {
 
     pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
         self.tickets.iter_mut().find(|ticket| ticket.id() == id)
+    }
+
+    pub fn j_entry(&mut self) {
+        if let Some(n) = self.selected {
+            // find the next ticket
+            // if no next ticket do nothing
+        }
+        if self.tickets().len() > 0 && self.selected == None {
+            // select the first ticket
+        }
     }
 }
 
