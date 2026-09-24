@@ -109,12 +109,3 @@ impl Ticket {
         }
     }
 }
-
-pub fn string_to_status(s_status: &str) -> TicketStatus {
-    match s_status {
-        "done" => TicketStatus::Done,
-        "pending" => TicketStatus::Pending,
-        "archived" => TicketStatus::Archived,
-        _ => TicketStatus::Undecided,
-    }
-}

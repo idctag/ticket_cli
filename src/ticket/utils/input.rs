@@ -1,9 +1,18 @@
 use std::{io, num::ParseIntError};
 
 use crate::ticket::{
-    ticket::{TicketUpdate, string_to_status},
+    ticket::{TicketStatus, TicketUpdate},
     user_tickets::UserTickets,
 };
+
+pub fn string_to_status(s_status: &str) -> TicketStatus {
+    match s_status {
+        "done" => TicketStatus::Done,
+        "pending" => TicketStatus::Pending,
+        "archived" => TicketStatus::Archived,
+        _ => TicketStatus::Undecided,
+    }
+}
 
 pub fn take_user_string(title: &str) -> String {
     let mut var = String::new();
@@ -38,7 +47,7 @@ pub fn prompt_apply_update(tickets: &mut UserTickets) {
         let title = take_user_string("enter ticket title to edit");
         let description = take_user_string("enter ticket description to edit");
         let status_str = take_user_string("enter ticket status to edit");
-        let s_status = string_to_status(&status_str);
+        let s_status = string_to_status(&status_str.trim());
 
         let mut update = TicketUpdate::new();
 
