@@ -1,8 +1,11 @@
 use std::{io, num::ParseIntError};
 
 use todo_cli::{
-    core::UserTickets,
-    ticket::{TicketUpdate, string_to_status},
+    ticket::{
+        ticket::{TicketUpdate, string_to_status},
+        user_tickets::UserTickets,
+    },
+    utils::display::{list_tickets, print_menu},
 };
 
 fn main() {
@@ -10,6 +13,7 @@ fn main() {
     tickets.add_ticket("One".to_string(), "One Description".to_string());
     tickets.add_ticket("Two".to_string(), "Two Description".to_string());
     tickets.add_ticket("Three".to_string(), "Three Description".to_string());
+
     loop {
         print_menu();
         match read_choice() {
@@ -19,20 +23,6 @@ fn main() {
             Ok(4) => break,
             _ => println!("Invalid choice"),
         }
-    }
-}
-
-fn print_menu() {
-    println!("Choose from options");
-    println!("[1] list");
-    println!("[2] add");
-    println!("[3] edit");
-    println!("[4] quit");
-}
-
-fn list_tickets(tickets: &UserTickets) {
-    for t in tickets.tickets() {
-        println!("{t}")
     }
 }
 
