@@ -3,7 +3,7 @@ use crate::ticket::ticket::Ticket;
 pub struct UserTickets {
     tickets: Vec<Ticket>,
     next_id: u32,
-    // selected: Option<usize>,
+    selected: Option<usize>,
 }
 
 impl UserTickets {
@@ -11,7 +11,7 @@ impl UserTickets {
         Self {
             tickets: Vec::new(),
             next_id: 1,
-            // selected: None,
+            selected: None,
         }
     }
 
@@ -32,18 +32,26 @@ impl UserTickets {
     }
 
     pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
-        self.tickets.iter_mut().find(|ticket| ticket.id() == id)
+        let ticket = self.tickets.iter_mut().find(|t| t.id() == id);
+        if ticket.is_none() {
+            println!("Ticket not found")
+        }
+
+        ticket
     }
 
-    // pub fn select_next(&mut self) {
-    //     if let Some(n) = self.selected {
-    //         // find the next ticket
-    //         // if no next ticket do nothing
-    //     }
-    //     if !self.tickets().is_empty() && self.selected.is_none() {
-    //         // select the first ticket
-    //     }
-    // }
+    pub fn select_next(&mut self) {
+        if let Some(n) = self.selected {
+            // find the next ticket
+            // if no next ticket do nothing
+            // how do i know the index of the current ticket
+            // how do i know the next ticket index
+            // how do i know the index of the tickets when the id's do not reflect the actual order
+        }
+        if !self.tickets().is_empty() && self.selected.is_none() {
+            self.selected = Some(self.tickets.first());
+        }
+    }
     // pub fn select_previous(&mut self) {
     //     if let Some(n) = self.selected {
     //         // find the previous ticket
