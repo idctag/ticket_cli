@@ -1,10 +1,8 @@
 use std::{io, num::ParseIntError};
 
-use todo_cli::{
-    ticket::{
-        ticket::{TicketUpdate, string_to_status},
-        user_tickets::UserTickets,
-    },
+use todo_cli::ticket::{
+    ticket::{TicketUpdate, string_to_status},
+    user_tickets::UserTickets,
     utils::display::{list_tickets, print_menu},
 };
 
