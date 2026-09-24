@@ -3,7 +3,7 @@ use std::{io, num::ParseIntError};
 use todo_cli::ticket::{
     ticket::{TicketUpdate, string_to_status},
     user_tickets::UserTickets,
-    utils::display::{list_tickets, print_menu},
+    utils::display::print_menu,
 };
 
 fn main() {
@@ -15,7 +15,11 @@ fn main() {
     loop {
         print_menu();
         match read_choice() {
-            Ok(1) => list_tickets(&tickets),
+            Ok(1) => {
+                for t in tickets.tickets() {
+                    println!("{t}")
+                }
+            }
             Ok(2) => add_ticket(&mut tickets),
             Ok(3) => edit_ticket(&mut tickets),
             Ok(4) => break,

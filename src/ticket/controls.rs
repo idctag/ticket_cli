@@ -6,7 +6,7 @@ impl UserTickets {
             // find the next ticket
             // if no next ticket do nothing
         }
-        if self.tickets().len() > 0 && self.selected == None {
+        if !self.tickets().is_empty() && self.selected.is_none() {
             // select the first ticket
         }
     }
@@ -14,7 +14,7 @@ impl UserTickets {
         if let Some(n) = self.selected {
             // find the previous ticket
         }
-        if self.tickets().len() > 0 && self.selected == None {
+        if !self.tickets().is_empty() && self.selected.is_none() {
             // select the last ticket
         }
     }

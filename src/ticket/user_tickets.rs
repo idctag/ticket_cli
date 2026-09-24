@@ -1,7 +1,7 @@
 use crate::ticket::ticket::Ticket;
 
 pub struct UserTickets {
-    pub tickets: Vec<Ticket>,
+    tickets: Vec<Ticket>,
     next_id: u32,
     pub selected: Option<usize>,
 }
