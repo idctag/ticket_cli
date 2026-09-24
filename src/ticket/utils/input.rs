@@ -1,7 +1,4 @@
-use std::{
-    io::{self, Write},
-    num::ParseIntError,
-};
+use std::io::{self, Write};
 
 use crate::ticket::{
     ticket::{TicketStatus, TicketUpdate},
@@ -26,39 +23,27 @@ pub fn take_user_string(title: &str) -> io::Result<String> {
     Ok(input.trim().to_string())
 }
 
-pub fn take_user_num(title: &str) -> Result<u32, ParseIntError> {
-    let mut var = String::new();
-    println!("{title}");
-    io::stdin()
-        .read_line(&mut var)
-        .expect("Failed to read line");
-    var.trim().parse()
-}
-
-pub fn read_choice() -> Result<u8, ParseIntError> {
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
-    input.trim().parse()
-}
-
 pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
-    let id_num = match take_user_num("Enter ticket id to edit") {
+    let id = take_user_string("Enter ticket id to edit")?;
+    let id_num = match id.trim().parse::<u32>() {
         Ok(n) => n,
         Err(_) => {
-            println!("Please enter valid ticket id");
-            Error
+            println!("Enter valid number");
+            return Ok(());
         }
     };
 
     let ticket_to_update = tickets.find_mut(id_num);
 
+    if ticket_to_update.is_none() {
+        println!("Ticket not found")
+    }
+
     if let Some(ticket) = ticket_to_update {
         let title = take_user_string("enter ticket title to edit")?;
         let description = take_user_string("enter ticket description to edit")?;
         let status_str = take_user_string("enter ticket status to edit")?;
-        let s_status = string_to_status(status_str);
+        let s_status = string_to_status(&status_str);
 
         let mut update = TicketUpdate::new();
 
@@ -67,10 +52,13 @@ pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
         update.status = Some(s_status);
         ticket.apply_update(update);
     }
+
+    Ok(())
 }
 
-pub fn prompt_add_ticket(tickets: &mut UserTickets) {
-    let title = take_user_string("Enter Title");
-    let description = take_user_string("Enter Description");
+pub fn prompt_add_ticket(tickets: &mut UserTickets) -> io::Result<()> {
+    let title = take_user_string("Enter Title")?;
+    let description = take_user_string("Enter Description")?;
     tickets.add_ticket(title, description);
+    Ok(())
 }

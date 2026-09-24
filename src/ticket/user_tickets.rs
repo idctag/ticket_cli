@@ -33,25 +33,22 @@ impl UserTickets {
 
     pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
         let ticket = self.tickets.iter_mut().find(|t| t.id() == id);
-        if ticket.is_none() {
-            println!("Ticket not found")
-        }
 
         ticket
     }
 
-    pub fn select_next(&mut self) {
-        if let Some(n) = self.selected {
-            // find the next ticket
-            // if no next ticket do nothing
-            // how do i know the index of the current ticket
-            // how do i know the next ticket index
-            // how do i know the index of the tickets when the id's do not reflect the actual order
-        }
-        if !self.tickets().is_empty() && self.selected.is_none() {
-            self.selected = Some(self.tickets.first());
-        }
-    }
+    // pub fn select_next(&mut self) {
+    //     if let Some(n) = self.selected {
+    //         // find the next ticket
+    //         // if no next ticket do nothing
+    //         // how do i know the index of the current ticket
+    //         // how do i know the next ticket index
+    //         // how do i know the index of the tickets when the id's do not reflect the actual order
+    //     }
+    //     if !self.tickets().is_empty() && self.selected.is_none() {
+    //         self.selected = Some(self.tickets.first());
+    //     }
+    // }
     // pub fn select_previous(&mut self) {
     //     if let Some(n) = self.selected {
     //         // find the previous ticket
