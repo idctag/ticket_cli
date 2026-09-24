@@ -1,9 +1,12 @@
-use crate::ticket::ticket::Ticket;
+use crate::ticket::{
+    ticket::{Ticket, TicketUpdate, string_to_status},
+    utils::input::{take_user_num, take_user_string},
+};
 
 pub struct UserTickets {
     tickets: Vec<Ticket>,
     next_id: u32,
-    pub selected: Option<usize>,
+    selected: Option<usize>,
 }
 
 impl UserTickets {
@@ -33,6 +36,49 @@ impl UserTickets {
 
     pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
         self.tickets.iter_mut().find(|ticket| ticket.id() == id)
+    }
+
+    pub fn edit_ticket(&mut self) {
+        let id_num: u32 = take_user_num("Enter ticket id to edit");
+        let ticket_to_update = self.find_mut(id_num);
+
+        if let Some(ticket) = ticket_to_update {
+            let title = take_user_string("enter ticket title to edit");
+            let description = take_user_string("enter ticket description to edit");
+            let status_str = take_user_string("enter ticket status to edit");
+            let s_status = string_to_status(&status_str);
+
+            let mut update = TicketUpdate::new();
+
+            update.title = Some(title);
+            update.description = Some(description);
+            update.status = Some(s_status);
+            ticket.apply_update(update);
+        }
+    }
+
+    pub fn insert_ticket(&mut self) {
+        let title = take_user_string("Enter Title");
+        let description = take_user_string("Enter Description");
+        self.add_ticket(title, description);
+    }
+
+    pub fn select_next(&mut self) {
+        if let Some(n) = self.selected {
+            // find the next ticket
+            // if no next ticket do nothing
+        }
+        if !self.tickets().is_empty() && self.selected.is_none() {
+            // select the first ticket
+        }
+    }
+    pub fn select_previous(&mut self) {
+        if let Some(n) = self.selected {
+            // find the previous ticket
+        }
+        if !self.tickets().is_empty() && self.selected.is_none() {
+            // select the last ticket
+        }
     }
 }
 
