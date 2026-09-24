@@ -1,6 +1,9 @@
 use todo_cli::ticket::{
     user_tickets::UserTickets,
-    utils::{display::print_menu, input::read_choice},
+    utils::{
+        display::print_menu,
+        input::{prompt_add_ticket, prompt_apply_update, read_choice},
+    },
 };
 
 fn main() {
@@ -17,8 +20,8 @@ fn main() {
                     println!("{t}")
                 }
             }
-            Ok(2) => tickets.insert_ticket(),
-            Ok(3) => tickets.edit_ticket(),
+            Ok(2) => prompt_add_ticket(&mut tickets),
+            Ok(3) => prompt_apply_update(&mut tickets),
             Ok(4) => break,
             _ => println!("Invalid choice"),
         }
