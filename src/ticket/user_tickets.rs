@@ -2,7 +2,7 @@ use crate::ticket::ticket::Ticket;
 
 pub struct UserTickets {
     tickets: Vec<Ticket>,
-    next_id: u32,
+    next_id: usize,
     selected: Option<usize>,
 }
 
@@ -15,7 +15,7 @@ impl UserTickets {
         }
     }
 
-    pub fn add_ticket(&mut self, title: String, description: String) -> u32 {
+    pub fn add_ticket(&mut self, title: String, description: String) -> usize {
         let id = self.next_id;
         self.next_id += 1;
         let new_ticket = Ticket::new(id, title, description);
@@ -27,28 +27,33 @@ impl UserTickets {
         &self.tickets
     }
 
-    pub fn find(&self, id: u32) -> Option<&Ticket> {
+    pub fn find(&self, id: usize) -> Option<&Ticket> {
         self.tickets.iter().find(|ticket| ticket.id() == id)
     }
 
-    pub fn find_mut(&mut self, id: u32) -> Option<&mut Ticket> {
+    pub fn find_mut(&mut self, id: usize) -> Option<&mut Ticket> {
         let ticket = self.tickets.iter_mut().find(|t| t.id() == id);
 
         ticket
     }
 
-    // pub fn select_next(&mut self) {
-    //     if let Some(n) = self.selected {
-    //         // find the next ticket
-    //         // if no next ticket do nothing
-    //         // how do i know the index of the current ticket
-    //         // how do i know the next ticket index
-    //         // how do i know the index of the tickets when the id's do not reflect the actual order
-    //     }
-    //     if !self.tickets().is_empty() && self.selected.is_none() {
-    //         self.selected = Some(self.tickets.first());
-    //     }
-    // }
+    pub fn select_next(&mut self) {
+        if self.tickets.is_empty() {
+            return self.selected = None;
+        }
+
+        if self.selected.is_none() {
+            return self.selected = Some(0);
+        }
+
+        if let Some(n) = self.selected {
+            if n == self.tickets.len() - 1 {
+                return;
+            } else {
+                self.selected = Some(n + 1)
+            }
+        }
+    }
 
     // pub fn select_previous(&mut self) {
     //     if let Some(n) = self.selected {
@@ -91,4 +96,9 @@ mod tests {
 
         assert_eq!(ticket.title(), "Ticket".to_string())
     }
+
+    // #[test]
+    // fn return_none_when_empty() {
+    //     let mut tickets = UserTickets::new();
+    // }
 }

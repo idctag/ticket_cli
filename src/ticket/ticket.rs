@@ -21,7 +21,7 @@ impl fmt::Display for TicketStatus {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Ticket {
-    id: u32,
+    id: usize,
     title: String,
     description: String,
     status: TicketStatus,
@@ -54,7 +54,7 @@ impl fmt::Display for Ticket {
 }
 
 impl Ticket {
-    pub fn new(id: u32, title: impl Into<String>, description: impl Into<String>) -> Self {
+    pub fn new(id: usize, title: impl Into<String>, description: impl Into<String>) -> Self {
         Self {
             id,
             title: title.into(),
@@ -63,7 +63,7 @@ impl Ticket {
         }
     }
 
-    pub fn id(&self) -> u32 {
+    pub fn id(&self) -> usize {
         self.id
     }
 

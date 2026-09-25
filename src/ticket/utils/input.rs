@@ -38,7 +38,7 @@ pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
         Some(t) => t,
         None => return Ok(()),
     };
-    let id_num = match id.trim().parse::<u32>() {
+    let id_num = match id.trim().parse::<usize>() {
         Ok(n) => n,
         Err(_) => {
             println!("Enter valid number");
