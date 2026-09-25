@@ -23,6 +23,10 @@ impl UserTickets {
         id
     }
 
+    pub fn get_size(&self) -> usize {
+        self.tickets.len()
+    }
+
     pub fn tickets(&self) -> &[Ticket] {
         &self.tickets
     }
@@ -35,6 +39,22 @@ impl UserTickets {
         let ticket = self.tickets.iter_mut().find(|t| t.id() == id);
 
         ticket
+    }
+
+    pub fn select_last(&mut self) {
+        if self.tickets.is_empty() {
+            return self.selected = None;
+        }
+
+        self.selected = Some(self.get_size() - 1)
+    }
+
+    pub fn select_first(&mut self) {
+        if self.tickets.is_empty() {
+            return self.selected = None;
+        }
+
+        self.selected = Some(0)
     }
 
     pub fn select_next(&mut self) {
@@ -55,14 +75,21 @@ impl UserTickets {
         }
     }
 
-    // pub fn select_previous(&mut self) {
-    //     if let Some(n) = self.selected {
-    //         // find the previous ticket
-    //     }
-    //     if !self.tickets().is_empty() && self.selected.is_none() {
-    //         // select the last ticket
-    //     }
-    // }
+    pub fn select_previous(&mut self) {
+        if self.tickets.is_empty() {
+            return self.selected = None;
+        }
+        if self.selected.is_none() {
+            return self.selected = Some(self.get_size() - 1);
+        }
+        if let Some(n) = self.selected {
+            if n == 0 {
+                return;
+            } else {
+                self.selected = Some(n - 1)
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -97,8 +124,137 @@ mod tests {
         assert_eq!(ticket.title(), "Ticket".to_string())
     }
 
-    // #[test]
-    // fn return_none_when_empty() {
-    //     let mut tickets = UserTickets::new();
-    // }
+    // next tests
+    #[test]
+    fn next_when_empty() {
+        let mut tickets = UserTickets::new();
+        assert_eq!(tickets.selected, None);
+        tickets.select_next();
+        assert_eq!(tickets.selected, None);
+    }
+
+    #[test]
+    fn next_on_one() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(0));
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(0));
+    }
+
+    #[test]
+    fn next_on_last() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_next();
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(1));
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(1));
+    }
+
+    #[test]
+    fn next_traversal() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(0));
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(1));
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(2));
+        tickets.select_next();
+        assert_eq!(tickets.selected, Some(3));
+    }
+
+    // prev tests
+    #[test]
+    fn prev_empty() {
+        let mut tickets = UserTickets::new();
+        assert_eq!(tickets.selected, None);
+        tickets.select_previous();
+        assert_eq!(tickets.selected, None);
+    }
+
+    #[test]
+    fn prev_on_one() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(0));
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(0));
+    }
+
+    #[test]
+    fn selected_first_doesnt_change() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+
+        tickets.select_last();
+        assert_eq!(tickets.selected, Some(1));
+
+        tickets.select_previous();
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(0));
+
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(0));
+    }
+
+    #[test]
+    fn prev_traversal() {
+        let mut tickets = UserTickets::new();
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+
+        tickets.select_last();
+        assert_eq!(tickets.selected, Some(3));
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(2));
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(1));
+        tickets.select_previous();
+        assert_eq!(tickets.selected, Some(0));
+    }
+
+    #[test]
+    fn select_last() {
+        let mut tickets = UserTickets::new();
+        assert_eq!(tickets.selected, None);
+        tickets.select_last();
+        assert_eq!(tickets.selected, None);
+
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_last();
+        assert_eq!(tickets.selected, Some(0));
+
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_last();
+        assert_eq!(tickets.selected, Some(1));
+    }
+
+    #[test]
+    fn select_first() {
+        let mut tickets = UserTickets::new();
+        assert_eq!(tickets.selected, None);
+        tickets.select_first();
+        assert_eq!(tickets.selected, None);
+
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_first();
+        assert_eq!(tickets.selected, Some(0));
+
+        tickets.add_ticket("title".to_string(), "desc".to_string());
+        tickets.select_first();
+        assert_eq!(tickets.selected, Some(0));
+    }
 }
