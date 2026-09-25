@@ -1,51 +1,51 @@
-use std::io::Result;
+use std::io::{self, Result};
 
-use todo_cli::ticket::{
-    user_tickets::UserTickets,
-    utils::{
-        display::print_menu,
-        input::{prompt_add_ticket, prompt_apply_update, take_user_string},
-    },
-};
+use crossterm::event::{self, Event, KeyEvent, KeyEventKind};
+use ratatui::{DefaultTerminal, Frame};
+use todo_cli::ticket::user_tickets::UserTickets;
 
-// TODO: TUI implementaiton
-// TODO: display existing tickets
-// TODO: wire core apis with tui
-// TODO: wire core apis with tui
 fn main() -> Result<()> {
-    let mut tickets = UserTickets::new();
-    tickets.add_ticket("One".to_string(), "One Description".to_string());
-    tickets.add_ticket("Two".to_string(), "Two Description".to_string());
-    tickets.add_ticket("Three".to_string(), "Three Description".to_string());
+    let mut app = App::new();
 
-    loop {
-        print_menu();
-        let choice = match take_user_string("")? {
-            Some(t) => t.parse(),
-            None => break,
-        };
-        match choice {
-            Ok(0) => {
-                break;
-            }
-            Ok(1) => {
-                for t in tickets.tickets() {
-                    println!("{t}")
-                }
-            }
-            Ok(2) => {
-                if let Err(error) = prompt_add_ticket(&mut tickets) {
-                    eprintln!("Could not read input {error}")
-                }
-            }
-            Ok(3) => {
-                if let Err(error) = prompt_apply_update(&mut tickets) {
-                    eprintln!("Could not apply update: {error}")
-                }
-            }
-            Ok(4) => break,
-            _ => println!("Invalid choice"),
+    Ok(())
+}
+
+struct App {
+    u_tickets: UserTickets,
+    exit: bool,
+}
+
+impl App {
+    pub fn new() -> Self {
+        Self {
+            u_tickets: UserTickets::new(),
+            exit: false,
         }
     }
-    Ok(())
+
+    pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
+        while !self.exit {
+            terminal.draw(|frame| self.draw(frame))?;
+            self.handle_events()?;
+        }
+        Ok(())
+    }
+
+    fn draw(&self, frame: &mut Frame) {
+        frame.render_widget(self, frame.area());
+    }
+
+    fn handle_events(&mut self) -> io::Result<()> {
+        match event::read()? {
+            Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
+                self.handle_key_event(key_event)
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+
+    fn handle_key_event(&mut self, key_event: KeyEvent) {
+        match key_event.code {}
+    }
 }
