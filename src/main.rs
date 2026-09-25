@@ -16,8 +16,14 @@ fn main() -> Result<()> {
 
     loop {
         print_menu();
-        let choice = take_user_string("")?.parse();
+        let choice = match take_user_string("")? {
+            Some(t) => t.parse(),
+            None => break,
+        };
         match choice {
+            Ok(0) => {
+                break;
+            }
             Ok(1) => {
                 for t in tickets.tickets() {
                     println!("{t}")

@@ -49,6 +49,7 @@ impl UserTickets {
     //         self.selected = Some(self.tickets.first());
     //     }
     // }
+
     // pub fn select_previous(&mut self) {
     //     if let Some(n) = self.selected {
     //         // find the previous ticket

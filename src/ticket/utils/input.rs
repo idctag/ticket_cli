@@ -14,17 +14,30 @@ pub fn string_to_status(s_status: &str) -> TicketStatus {
     }
 }
 
-pub fn take_user_string(title: &str) -> io::Result<String> {
+pub fn take_user_string(title: &str) -> io::Result<Option<String>> {
     println!("{title}");
     io::stdout().flush()?;
 
-    let mut input = String::new();
-    io::stdin().read_line(&mut input)?;
-    Ok(input.trim().to_string())
+    loop {
+        let mut input = String::new();
+        let byte_count = io::stdin().read_line(&mut input)?;
+
+        if byte_count == 0 {
+            return Ok(None);
+        }
+        let text = input.trim();
+        if text.is_empty() {
+            continue;
+        }
+        return Ok(Some(text.to_string()));
+    }
 }
 
 pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
-    let id = take_user_string("Enter ticket id to edit")?;
+    let id = match take_user_string("Enter ticket id to edit")? {
+        Some(t) => t,
+        None => return Ok(()),
+    };
     let id_num = match id.trim().parse::<u32>() {
         Ok(n) => n,
         Err(_) => {
@@ -40,9 +53,18 @@ pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
     }
 
     if let Some(ticket) = ticket_to_update {
-        let title = take_user_string("enter ticket title to edit")?;
-        let description = take_user_string("enter ticket description to edit")?;
-        let status_str = take_user_string("enter ticket status to edit")?;
+        let title = match take_user_string("enter ticket title to edit")? {
+            Some(t) => t,
+            None => return Ok(()),
+        };
+        let description = match take_user_string("enter ticket description to edit")? {
+            Some(t) => t,
+            None => return Ok(()),
+        };
+        let status_str = match take_user_string("enter ticket status to edit")? {
+            Some(t) => t,
+            None => return Ok(()),
+        };
         let s_status = string_to_status(&status_str);
 
         let mut update = TicketUpdate::new();
@@ -57,8 +79,14 @@ pub fn prompt_apply_update(tickets: &mut UserTickets) -> io::Result<()> {
 }
 
 pub fn prompt_add_ticket(tickets: &mut UserTickets) -> io::Result<()> {
-    let title = take_user_string("Enter Title")?;
-    let description = take_user_string("Enter Description")?;
+    let title = match take_user_string("Enter Title")? {
+        Some(t) => t,
+        None => return Ok(()),
+    };
+    let description = match take_user_string("Enter Description")? {
+        Some(t) => t,
+        None => return Ok(()),
+    };
     tickets.add_ticket(title, description);
     Ok(())
 }
