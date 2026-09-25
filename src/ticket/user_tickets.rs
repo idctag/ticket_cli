@@ -216,7 +216,7 @@ mod tests {
         tickets.add_ticket("title".to_string(), "desc".to_string());
         tickets.add_ticket("title".to_string(), "desc".to_string());
 
-        tickets.select_last();
+        tickets.select_previous();
         assert_eq!(tickets.selected, Some(3));
         tickets.select_previous();
         assert_eq!(tickets.selected, Some(2));
