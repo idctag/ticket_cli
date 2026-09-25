@@ -256,5 +256,10 @@ mod tests {
         tickets.add_ticket("title".to_string(), "desc".to_string());
         tickets.select_first();
         assert_eq!(tickets.selected, Some(0));
+
+        tickets.select_last();
+        assert_eq!(tickets.selected, Some(1));
+        tickets.select_first();
+        assert_eq!(tickets.selected, Some(0));
     }
 }
