@@ -4,7 +4,7 @@ use todo_cli::ticket::{
     user_tickets::UserTickets,
     utils::{
         display::print_menu,
-        input::{prompt_add_ticket, prompt_apply_update},
+        input::{prompt_add_ticket, prompt_apply_update, take_user_string},
     },
 };
 
@@ -16,6 +16,7 @@ fn main() -> Result<()> {
 
     loop {
         print_menu();
+        let choice = take_user_string("")?.parse();
         match choice {
             Ok(1) => {
                 for t in tickets.tickets() {
