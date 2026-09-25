@@ -8,6 +8,10 @@ use todo_cli::ticket::{
     },
 };
 
+// TODO: TUI implementaiton
+// TODO: display existing tickets
+// TODO: wire core apis with tui
+// TODO: wire core apis with tui
 fn main() -> Result<()> {
     let mut tickets = UserTickets::new();
     tickets.add_ticket("One".to_string(), "One Description".to_string());
